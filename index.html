@@ -59,9 +59,19 @@ var DATER_PKG = (function (){
 	function getDateBefore (start_date,days){
 		return new Date(start_date.getTime() - days*MS_PER_DAY);		
 	}
+	function isMonthLastWeek (week_start_date){
+		var week_end_date = getDateAfter(week_start_date,6);
+
+		if (week_start_date.getMonth() != week_end_date.getMonth() || getDateAfter(week_end_date,1).getMonth() != week_end_date.getMonth()) {
+			return true;
+		}
+
+		return false;
+	}
 	return {
 		getDateAfter: getDateAfter,
-		getDateBefore: getDateBefore
+		getDateBefore: getDateBefore,
+		isMonthLastWeek: isMonthLastWeek
 	}
 }());
 
@@ -122,10 +132,18 @@ function CMonth (date){
 
 function showCalendar (START_DATE,days){
 	var END_DATE = DATER_PKG.getDateAfter(START_DATE,days-1),
-		WEEK_START_DAY = DATER_PKG.getDateBefore(START_DATE,START_DATE.getDay());
+		WEEK_START_DAY = DATER_PKG.getDateBefore(START_DATE,START_DATE.getDay()),
+		month = new CMonth(START_DATE);
 
-	var month = new CMonth(START_DATE);
-	month.addWeek(WEEK_START_DAY,styleFcn);
+	while	(WEEK_START_DAY <= END_DATE){
+		month.addWeek(WEEK_START_DAY,styleFcn);
+		if (DATER_PKG.isMonthLastWeek(WEEK_START_DAY)) {
+			console.log("break");
+			month.print();
+			month = new CMonth(DATER_PKG.getDateAfter(WEEK_START_DAY,7));
+		}
+		WEEK_START_DAY = DATER_PKG.getDateAfter(WEEK_START_DAY,7)
+	};
 	month.print();
 
 	function styleFcn (day){
@@ -137,7 +155,7 @@ function showCalendar (START_DATE,days){
 };
 
 window.onload = function (){
-	showCalendar(new Date(),4);
+	showCalendar(new Date(),35);
 }
 </script>
 </body>
