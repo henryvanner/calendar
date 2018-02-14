@@ -4,10 +4,86 @@
 	<meta charset = "utf-8">
 	<title>Calendar</title>
 	<style type="text/css">
-		
+	table.calendar{
+		border: 1px solid #000;		
+	}
+	table.calendar td{
+		padding: 2px;
+		width: 24px;
+		height: 24px;
+	}
+	table.calendar thead td.title {
+		text-align: center;
+		background-color: #8de67f;
+	}
+	table.calendar tbody td{
+		background-color: #56df40;		
+	}
+	table.calendar tbody td:first-child,
+	table.calendar tbody td:last-child{
+		background-color: #ebe838;
+	}
+	table.calendar tbody td.invalid{
+		background-color: #aaa;
+	}
+	table.calendar tbody td.holiday{
+		background-color: #f39c12;
+	}
+	div.calendar-box,
+	div.controls{
+		padding: 10px 5px;
+	}
 	</style>
 </head>
 <body>
+<label for="">CALENDAR</label>
+<div class="controls">
+<span>Start date</span>
+<input type="date" id="startDate">
+<span>Days</span>
+<input type="number" min="1" value = "17" id="numDays">
+<span>Contry Code</span>
+<input type="text" id="countryCode">
+<input type="button" id="showCalendar" value="Show calendar">
+</div>
+<div id="calendar-box">
+	<table class="calendar">
+		<thead>
+			<tr>
+				<td>Sun</td>
+				<td>Mon</td>
+				<td>Tue</td>
+				<td>Wed</td>
+				<td>Thu</td>
+				<td>Fri</td>
+				<td>Sat</td>
+			</tr>
+			<tr>
+				<td class="title" colspan="7">August 2008</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="invalid">1</td>
+				<td class="invalid">2</td>
+				<td class="holiday">3</td>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+				<td>7</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+				<td>7</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
 <script type="text/javascript">
 
 </script>
