@@ -124,7 +124,9 @@ function CMonth (date){
 	}
 
 	function print (){
-		document.querySelector("div#calendar-box").append(DOM);
+		if (DOM.querySelector("tbody").childNodes.length != 0) {
+			document.querySelector("div#calendar-box").append(DOM);
+		}
 	}
 
 	function getMonth (){
@@ -139,14 +141,20 @@ function CMonth (date){
 function showCalendar (START_DATE,days){
 	var END_DATE = DATER_PKG.getDateAfter(START_DATE,days-1),
 		WEEK_START_DAY = DATER_PKG.getDateBefore(START_DATE,START_DATE.getDay()),
-		month = new CMonth(START_DATE);
+		WEEK_END_DAY = month = new CMonth(START_DATE);
 
-	while	(WEEK_START_DAY <= END_DATE){
+	document.querySelector("div#calendar-box").innerHTML = "";
+
+	while (WEEK_START_DAY <= END_DATE){
 		month.addWeek(WEEK_START_DAY,styleFcn);
 		if (DATER_PKG.isMonthLastWeek(WEEK_START_DAY,month.getMonth())) {
 			month.print();
 			month = new CMonth(DATER_PKG.getDateAfter(WEEK_START_DAY,7));
-			continue;
+			WEEK_END_DAY = DATER_PKG.getDateAfter(WEEK_START_DAY,6);
+			if (WEEK_START_DAY.getMonth() != WEEK_END_DAY.getMonth() && 
+				( WEEK_START_DAY.getFullYear() < END_DATE.getFullYear() || WEEK_START_DAY.getMonth() < END_DATE.getMonth() ) ) {
+				continue;
+			}
 		}
 		WEEK_START_DAY = DATER_PKG.getDateAfter(WEEK_START_DAY,7)
 	};
@@ -162,8 +170,8 @@ function showCalendar (START_DATE,days){
 };
 
 window.onload = function (){
-	showCalendar(new Date(),35);
-}
+	
+};
 </script>
 </body>
 </html>
