@@ -125,11 +125,15 @@ function showCalendar (START_DATE,days){
 		WEEK_START_DAY = DATER_PKG.getDateBefore(START_DATE,START_DATE.getDay());
 
 	var month = new CMonth(START_DATE);
-	month.addWeek(WEEK_START_DAY,function (){
-		
-	});
+	month.addWeek(WEEK_START_DAY,styleFcn);
 	month.print();
 
+	function styleFcn (day){
+		//'this' represents the 'td' associated to 'day'
+		if (day < START_DATE || day > END_DATE ) {
+			this.classList.add("invalid");
+		}
+	}
 };
 
 window.onload = function (){
