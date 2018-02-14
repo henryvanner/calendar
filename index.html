@@ -170,7 +170,17 @@ function showCalendar (START_DATE,days){
 };
 
 window.onload = function (){
-	
+	var btn = document.querySelector("input#showCalendar");
+	btn.addEventListener("click",function (e){
+		var startDate = document.querySelector("input#startDate").value;		
+		var date = startDate.split("-");
+		var numDays = document.querySelector("input#numDays").value;
+		if (!startDate) {
+			alert("Pick a date!");
+			return;
+		}
+		showCalendar(new Date(date[0],parseInt(date[1])-1,date[2]),numDays);
+	});
 };
 </script>
 </body>
