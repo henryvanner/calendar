@@ -47,45 +47,93 @@
 <input type="button" id="showCalendar" value="Show calendar">
 </div>
 <div id="calendar-box">
-	<table class="calendar">
-		<thead>
-			<tr>
-				<td>Sun</td>
-				<td>Mon</td>
-				<td>Tue</td>
-				<td>Wed</td>
-				<td>Thu</td>
-				<td>Fri</td>
-				<td>Sat</td>
-			</tr>
-			<tr>
-				<td class="title" colspan="7">August 2008</td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td class="invalid">1</td>
-				<td class="invalid">2</td>
-				<td class="holiday">3</td>
-				<td>4</td>
-				<td>5</td>
-				<td>6</td>
-				<td>7</td>
-			</tr>
-			<tr>
-				<td>1</td>
-				<td>2</td>
-				<td>3</td>
-				<td>4</td>
-				<td>5</td>
-				<td>6</td>
-				<td>7</td>
-			</tr>
-		</tbody>
-	</table>
+	
 </div>
 <script type="text/javascript">
 
+var DATER_PKG = (function (){
+	var MS_PER_DAY = 24*60*60*1000;
+	function getDateAfter (start_date,days){
+		return new Date(start_date.getTime() + days*MS_PER_DAY);
+	}
+	function getDateBefore (start_date,days){
+		return new Date(start_date.getTime() - days*MS_PER_DAY);		
+	}
+	return {
+		getDateAfter: getDateAfter,
+		getDateBefore: getDateBefore
+	}
+}());
+
+function CMonth (date){
+
+	const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
+		MONTHS = ["Juanuary","February","March","April","May","June","July","August","September","October","November","December"];
+
+	var DATE = date;
+	var DOM = (function (d){
+		var table = document.createElement("table")
+			,thead = document.createElement("thead")
+			,tbody = document.createElement("tbody")
+			,days = document.createElement("tr")
+			,title = document.createElement("tr")
+			,td;
+
+		table.classList.add("calendar");
+
+		for (var i = 0; i < 7; i++) {
+			td = document.createElement("td");
+			td.textContent = DAYS[i];
+			days.append(td);
+		};
+
+		td = document.createElement("td");
+		td.colSpan = 7;
+		td.classList.add("title");
+		td.textContent = MONTHS[d.getMonth()] + " " +d.getFullYear();
+		title.append(td);
+		thead.append(title)
+		thead.append(days);		
+		table.append(thead);
+		table.append(tbody);
+		return table;
+
+	}(date));
+
+	function addWeek (start_day,style_fcn){
+		var tr = document.createElement("tr"),td;			
+		for (var i = 0; i < 7; i++) {
+			td = document.createElement("td");
+			td.textContent = start_day.getDate();
+			style_fcn.call(td,start_day);
+			start_day = DATER_PKG.getDateAfter(start_day,1);
+			tr.append(td);
+		}
+		DOM.querySelector("tbody").append(tr);
+	}
+
+	function print (){
+		document.querySelector("div#calendar-box").append(DOM);
+	}
+
+	this.addWeek = addWeek;
+	this.print = print;
+}
+
+function showCalendar (start_date,days){
+	var month = new CMonth(new Date());
+	month.addWeek(new Date(),function (day){
+
+	});
+	month.addWeek(new Date(),function (day){
+
+	});
+	month.print();
+};
+
+window.onload = function (){
+	showCalendar();
+}
 </script>
 </body>
 </html>
