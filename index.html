@@ -5,7 +5,8 @@
 	<title>Calendar</title>
 	<style type="text/css">
 	table.calendar{
-		border: 1px solid #000;		
+		border: 1px solid #000;
+		margin-bottom: 10px;
 	}
 	table.calendar td{
 		padding: 2px;
@@ -59,10 +60,10 @@ var DATER_PKG = (function (){
 	function getDateBefore (start_date,days){
 		return new Date(start_date.getTime() - days*MS_PER_DAY);		
 	}
-	function isMonthLastWeek (week_start_date){
+	function isMonthLastWeek (week_start_date,month){
 		var week_end_date = getDateAfter(week_start_date,6);
 
-		if (week_start_date.getMonth() != week_end_date.getMonth() || getDateAfter(week_end_date,1).getMonth() != week_end_date.getMonth()) {
+		if ( (week_start_date.getMonth() != week_end_date.getMonth() && week_start_date.getMonth() === month ) || getDateAfter(week_end_date,1).getMonth() != week_end_date.getMonth()) {
 			return true;
 		}
 
@@ -115,7 +116,7 @@ function CMonth (date){
 		for (var i = 0; i < 7; i++) {
 			td = document.createElement("td");
 			td.textContent = start_day.getDate();
-			style_fcn.call(td,start_day);
+			style_fcn.call(td,start_day,DATE.getMonth());
 			start_day = DATER_PKG.getDateAfter(start_day,1);
 			tr.append(td);
 		}
@@ -126,8 +127,13 @@ function CMonth (date){
 		document.querySelector("div#calendar-box").append(DOM);
 	}
 
+	function getMonth (){
+		return DATE.getMonth();
+	}
+
 	this.addWeek = addWeek;
 	this.print = print;
+	this.getMonth = getMonth;
 }
 
 function showCalendar (START_DATE,days){
@@ -137,19 +143,20 @@ function showCalendar (START_DATE,days){
 
 	while	(WEEK_START_DAY <= END_DATE){
 		month.addWeek(WEEK_START_DAY,styleFcn);
-		if (DATER_PKG.isMonthLastWeek(WEEK_START_DAY)) {
-			console.log("break");
+		if (DATER_PKG.isMonthLastWeek(WEEK_START_DAY,month.getMonth())) {
 			month.print();
 			month = new CMonth(DATER_PKG.getDateAfter(WEEK_START_DAY,7));
+			continue;
 		}
 		WEEK_START_DAY = DATER_PKG.getDateAfter(WEEK_START_DAY,7)
 	};
 	month.print();
 
-	function styleFcn (day){
+	function styleFcn (day,month){
 		//'this' represents the 'td' associated to 'day'
-		if (day < START_DATE || day > END_DATE ) {
+		if (day < START_DATE || day > END_DATE || day.getMonth() != month) {
 			this.classList.add("invalid");
+			this.textContent = "";
 		}
 	}
 };
